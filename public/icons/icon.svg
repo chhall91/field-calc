@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#111418"/>
+  <g transform="translate(256 256) rotate(-45)">
+    <rect x="-34" y="-150" width="68" height="250" rx="20" fill="#ffb400"/>
+    <path d="M-80 -150 a80 80 0 1 1 160 0 l-38 0 l0 -52 l-84 0 l0 52 z" fill="#ffb400"/>
+  </g>
+  <text x="256" y="440" font-family="Arial, Helvetica, sans-serif" font-size="92" font-weight="700" fill="#ffffff" text-anchor="middle">FC</text>
+</svg>

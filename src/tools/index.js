@@ -1,0 +1,18 @@
+import torque from './torque.js';
+import adapter from './adapter.js';
+import bolt from './bolt.js';
+import thread from './thread.js';
+import units from './units.js';
+import drill from './drill.js';
+import socket from './socket.js';
+import flange from './flange.js';
+import sling from './sling.js';
+import capacity from './capacity.js';
+import hardware from './hardware.js';
+import cg from './cg.js';
+import weight from './weight.js';
+import dd from './dd.js';
+export const TOOLS = [socket, torque, adapter, bolt, thread, flange, sling, capacity, hardware, cg, weight, dd, units, drill];
+export const GROUPS = [['fast', 'Fasteners & torque'], ['piping', 'Piping'], ['rigging', 'Rigging'], ['gen', 'General']];
+export const groupOf = (t) => t.group || (['units', 'drill'].includes(t.id) ? 'gen' : 'fast');
+export const toolById = (id) => TOOLS.find((t) => t.id === id);
