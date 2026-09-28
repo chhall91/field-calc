@@ -1,6 +1,6 @@
 import './style.css';
 import { store } from './storage.js';
-import { TOOLS, toolById, GROUPS, groupOf } from './tools/index.js';
+import { toolById } from './tools/index.js';
 import { esc, DISCLAIMER } from './ui.js';
 import { BOLT_SOURCES } from './data/bolts.js';
 import { SOCKET_SOURCES } from './data/sockets.js';
@@ -9,8 +9,9 @@ import { RIGGING_SOURCES, RIG_DISCLAIMER } from './data/rigging.js';
 import { jobsList, jobDetail, jobShare, importPaste, importPreview, saveToJobSheet, teamScreen, sendScreen, wireSyncBar } from './jobs-ui.js';
 import { sync } from './sync-instance.js';
 import { HAS_SYNC } from './lib/env.js';
+import { tilesHtml, renderEdit } from './home-layout.js';
 
-const APP_VERSION = '0.5.0';
+const APP_VERSION = '0.6.0';
 const app = document.getElementById('app');
 app.innerHTML = `
   <header class="bar">
@@ -112,14 +113,21 @@ const entryHtml = (e, extra = '') => {
   return `<li><a class="entry" href="${esc(entryLink(e))}"><span class="e-ico">${t ? t.icon : '•'}</span><span class="e-txt"><small>${esc(t ? t.title : e.tool)} · ${timeAgo(e.ts)}</small>${esc(e.summary)}</span></a>${extra}</li>`;
 };
 
+let editingLayout = false;
 function home() {
-  setChrome({ title: 'Field Calc', nav: 'home' });
+  setChrome({ title: editingLayout ? 'Rearrange tools' : 'Field Calc', nav: 'home' });
+  document.body.classList.toggle('layout-editing', editingLayout);
+  if (editingLayout) {
+    renderEdit(view, { toast, onDone: () => { editingLayout = false; home(); window.scrollTo(0, 0); toast('Layout saved'); } });
+    return;
+  }
   const favs = store.favs().slice(0, 5), recents = store.recents().slice(0, 5);
   view.innerHTML = `
-    ${GROUPS.map(([g, label]) => { const ts = TOOLS.filter((t) => groupOf(t) === g); return ts.length ? `<h3 class="grp">${label}</h3><div class="grid">${ts.map((t) => `<a class="tile${t.featured ? ' featured' : ''}" href="#/t/${t.id}">${t.featured || t.isNew ? '<span class="badge">NEW</span>' : ''}<span class="t-ico">${t.icon}</span><b>${t.title}</b><small>${t.desc}</small></a>`).join('')}</div>` : ''; }).join('')}
+    ${tilesHtml()}
     ${favs.length ? `<section class="card flush"><h3 class="pad">★ Favorites</h3><ul class="entries">${favs.map((e) => entryHtml(e)).join('')}</ul></section>` : ''}
     <section class="card flush"><h3 class="pad">Recent</h3>${recents.length ? `<ul class="entries">${recents.map((e) => entryHtml(e)).join('')}</ul>` : '<p class="hint pad">Your recent calculations will show up here. Works offline.</p>'}</section>
     <p class="fine">${DISCLAIMER}</p>`;
+  $('editLayout').addEventListener('click', () => { editingLayout = true; home(); window.scrollTo(0, 0); });
 }
 
 function saved() {
@@ -190,6 +198,7 @@ function render() {
   const { parts, state } = parseHash();
   current = null; clearTimeout(recentTimer);
   window.scrollTo(0, 0);
+  if (parts.length) { editingLayout = false; document.body.classList.remove('layout-editing'); }
   if (parts[0] === 't' && toolById(parts[1])) {
     const tool = toolById(parts[1]);
     setChrome({ title: tool.title, back: true, fav: true });

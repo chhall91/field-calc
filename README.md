@@ -10,6 +10,7 @@ npm run build      # production build -> dist/ (sw.js gets full precache list in
 npm run preview    # serve dist/ (service worker active, offline-capable)
 npm run serve      # dist/ + /api push-sharing server (Node + SQLite) on :4173
 npm run build:pages  # static build for GitHub Pages at /field-calc/ (crew push-sharing disabled)
+node scripts/verify-layout.mjs  # headless check of tile rearranging (BASE=http://localhost:4173/ for local)
 npm run icons      # regenerate PNG icons from public/icons/icon.svg
 npm run screenshots  # 390x844 screenshots + offline check (needs dev on :5174 and preview on :4173)
 ```
@@ -18,6 +19,7 @@ npm run screenshots  # 390x844 screenshots + offline check (needs dev on :5174 a
 - `src/lib/` — pure math: `units.js` (conversions), `fraction.js`, `torque.js` (adapter formula, T=KDF)
 - `src/data/` — reference data with sources in comments: `bolts.js`, `fasteners.js`, `drills.js`
 - `src/tools/` — one file per tool screen
+- `src/home-layout.js` — home tile rearranging (edit mode, pointer drag + ▲▼, saved in localStorage `fc.tileOrder`); merge logic in `src/lib/order.js`
 - `public/sw.js` — offline-first service worker; `vite.config.js` injects the precache list at build
 - `tests/` — unit tests
 
