@@ -22,16 +22,16 @@ export default {
       let dims = '';
       if (s.sh === 'plate') dims = `<div class="row gap">${numField('a', `Length (${lu})`, s.a, 'e.g. 8')}${numField('b', `Width (${lu})`, s.b, 'e.g. 4')}</div>${numField('c', `Thickness (${su})`, s.c, 'e.g. 1')}`;
       else if (s.sh === 'bar') dims = `<div class="row gap">${numField('c', `Diameter (${su})`, s.c, 'e.g. 4')}${numField('a', `Length (${lu})`, s.a, 'e.g. 10')}</div>`;
-      else dims = `<div class="row gap"><label class="field grow"><span class="lbl">NPS</span><select id="nps">${options(Object.fromEntries(PIPE.map((p) => [p.nps, p.nps + '"'])), s.nps)}</select></label>
-          <div class="field grow"><span class="lbl">Wall</span>${seg('sch', [['40', 'Sch 40'], ['80', 'Sch 80'], ['x', 'Custom']], s.sch)}</div></div>
+      else dims = `<label class="field"><span class="lbl">NPS</span><select id="nps">${options(Object.fromEntries(PIPE.map((p) => [p.nps, p.nps + '"'])), s.nps)}</select></label>
+          <div class="field"><span class="lbl">Wall</span>${seg('sch', [['40', 'Sch 40'], ['80', 'Sch 80'], ['x', 'Custom OD/wall']], s.sch)}</div>
           ${s.sch === 'x' ? `<div class="row gap">${numField('od', `OD (${su})`, s.od, 'e.g. 6.625')}${numField('wt', `Wall (${su})`, s.wt, 'e.g. 0.280')}</div>` : ''}
           ${numField('a', `Length (${lu})`, s.a, 'e.g. 20')}
           <span class="lbl">Contents</span>${seg('wtr', [['0', 'Empty'], ['1', 'Full of water']], s.wtr)}`;
       el.innerHTML = `${rigBanner()}
         <div class="card">${seg('sh', Object.entries(SH), s.sh)}
           <div class="row gap mt"><label class="field grow"><span class="lbl">Material</span><select id="mat">${options(Object.fromEntries(Object.entries(DENSITY).map(([k, v]) => [k, `${v.label} (${v.lbft3} lb/ft³)`])), s.mat)}</select></label></div>
-          <div class="row gap"><div class="field grow"><span class="lbl">Length unit</span>${seg('lu', [['in', 'in'], ['ft', 'ft'], ['mm', 'mm'], ['m', 'm']], lu)}</div>
-          <div class="field"><span class="lbl">Section unit</span>${seg('su', [['in', 'in'], ['mm', 'mm']], su)}</div></div>
+          <div class="field"><span class="lbl">Length unit</span>${seg('lu', [['in', 'in'], ['ft', 'ft'], ['mm', 'mm'], ['m', 'm']], lu)}</div>
+          ${s.sh !== 'pipe' || s.sch === 'x' ? `<div class="field"><span class="lbl">${s.sh === 'plate' ? 'Thickness' : 'Diameter / wall'} unit</span>${seg('su', [['in', 'in'], ['mm', 'mm']], su)}</div>` : ''}
           ${dims}
           ${numField('q', 'Quantity', s.q, '1')}
         </div>

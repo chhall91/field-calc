@@ -44,7 +44,7 @@ export default {
     const drawInputs = () => {
       $('angbox').hidden = s.legs === '1';
       $('angin').innerHTML = s.m === 'ang' ? numField('a', 'Angle from horizontal (°)', s.a, 'e.g. 60')
-        : numField('h', 'Height H (hook to load, vertical)', s.h, 'e.g. 5') + numField('l', 'Sling leg length L', s.l, 'e.g. 6');
+        : numField('h', 'Height H (vertical)', s.h, 'hook to load') + numField('l', 'Leg length L', s.l, 'along sling');
       $('angin').querySelectorAll('input').forEach((i) => i.addEventListener('input', () => { s[i.id] = i.value.trim(); calc(); }));
     };
     const calc = () => {
